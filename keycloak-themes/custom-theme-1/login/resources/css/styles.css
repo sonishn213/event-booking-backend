@@ -1,0 +1,73 @@
+.login-pf body {
+    background: #000;
+    color:white;
+}
+
+.card-pf{
+    background: #0c101b;
+    border: 1px #232938 solid;
+    border-radius: 10px;
+}
+
+#kc-info-wrapper {
+    background-color: #040913;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.login-pf-page .login-pf-signup {
+    color: white;
+}
+
+.pf-c-form-control{
+    color: #FFFFFF !important;
+    background-color: #1C2333 !important;
+    border-color: #3A445C !important;
+    border-radius: 6px;
+}
+
+.pf-c-input-group .pf-c-form-control{
+    border-top-right-radius :0;
+    border-bottom-right-radius :0;
+}
+
+.pf-c-button.pf-m-control {
+    background-color: #1c2333;
+    color:white;
+    border-top-right-radius :6px;
+      border-bottom-right-radius :6px;
+}
+
+.pf-c-button:after {
+  border: 1px #3A445C solid;
+  border-top-right-radius :6px;
+  border-bottom-right-radius :6px;
+}
+
+.pf-c-button.pf-m-control:after {
+     border-top-right-radius :6px;
+      border-bottom-right-radius :6px;
+}
+
+.pf-c-input-group {
+    background: transparent;
+}
+
+input.pf-c-button{
+   padding-top: 10px;
+   padding-bottom: 10px;
+   border-radius: 6px;
+}
+
+.login-pf-header .col-md-10{
+    width:100%;
+}
+
+.subtitle {
+    margin-top:0;
+}
+
+
+.login-pf-page{
+    padding-bottom:40px;
+}
