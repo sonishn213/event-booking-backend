@@ -16,6 +16,7 @@ import com.projects.eventticket.eventticket.repository.UserRepository;
 import com.projects.eventticket.eventticket.services.EventService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -165,7 +166,8 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public Optional<Event> getPublishedEvent(UUID eventId) {
-        return eventRepository.findByIdAndStatus(eventId,EventStatusEnum.PUBLISHED);
+    @Cacheable(value = "eventDetails", key = "#eventId",unless = "#result == null")
+    public Event getPublishedEvent(UUID eventId) {
+        return eventRepository.findByIdAndStatus(eventId,EventStatusEnum.PUBLISHED).orElse(null);
     }
 }
