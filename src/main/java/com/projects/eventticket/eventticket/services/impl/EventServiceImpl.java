@@ -16,7 +16,9 @@ import com.projects.eventticket.eventticket.repository.UserRepository;
 import com.projects.eventticket.eventticket.services.EventService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -34,6 +36,9 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional
+    @Caching(evict = {
+            @CacheEvict(value = "publishedEvents", allEntries = true),
+    })
     public Event createEvent(UUID organizerId, CreateEventRequest event) {
         User organizer= userRepository.findById(organizerId)
                 .orElseThrow(()->new UserNotFoundException(
@@ -79,6 +84,10 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional
+    @Caching(evict = {
+            @CacheEvict(value = "publishedEvents", allEntries = true),
+            @CacheEvict(value = "eventDetails", key = "#eventId")
+    })
     public Event updateEventForOrganizer(UUID organizerId, UUID eventId, UpdateEventRequest event) {
         if(null == event.getId()){
             throw new EventUpdateException("Event Id cannot be null");
@@ -150,12 +159,17 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional
+    @Caching(evict = {
+            @CacheEvict(value = "publishedEvents", allEntries = true),
+            @CacheEvict(value = "eventDetails", key = "#eventId")
+    })
     public void deleteEventForOrganizer(UUID organizerId, UUID eventId) {
         getEventForOrganizer(organizerId,eventId)
                 .ifPresent(eventRepository::delete);
     }
 
     @Override
+    @Cacheable(value = "publishedEvents", key = "#pageable.pageNumber",unless = "#result == null")
     public Page<Event> listPublishedEvents(Pageable pageable) {
         return eventRepository.findByStatus(EventStatusEnum.PUBLISHED,pageable);
     }
