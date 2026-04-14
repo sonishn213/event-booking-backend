@@ -1,5 +1,7 @@
 package com.projects.eventticket.eventticket.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.projects.eventticket.eventticket.domain.enums.EventStatusEnum;
 import jakarta.persistence.*;
 import lombok.*;

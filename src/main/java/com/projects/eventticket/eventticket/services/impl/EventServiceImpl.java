@@ -1,5 +1,8 @@
 package com.projects.eventticket.eventticket.services.impl;
 
+import com.projects.eventticket.eventticket.domain.dtos.GetPublishedEventDetailsResponseDto;
+import com.projects.eventticket.eventticket.domain.dtos.ListPublishedEventResponseDto;
+import com.projects.eventticket.eventticket.domain.dtos.PageWrapperDto;
 import com.projects.eventticket.eventticket.domain.entity.Event;
 import com.projects.eventticket.eventticket.domain.entity.TicketType;
 import com.projects.eventticket.eventticket.domain.entity.User;
@@ -11,6 +14,7 @@ import com.projects.eventticket.eventticket.exception.EventNotFoundException;
 import com.projects.eventticket.eventticket.exception.EventUpdateException;
 import com.projects.eventticket.eventticket.exception.TicketTypeNotFoundException;
 import com.projects.eventticket.eventticket.exception.UserNotFoundException;
+import com.projects.eventticket.eventticket.mappers.EventsMapper;
 import com.projects.eventticket.eventticket.repository.EventRepository;
 import com.projects.eventticket.eventticket.repository.UserRepository;
 import com.projects.eventticket.eventticket.services.EventService;
@@ -33,6 +37,7 @@ public class EventServiceImpl implements EventService {
 
     private final UserRepository userRepository;
     private final EventRepository eventRepository;
+    private final EventsMapper eventsMapper;
 
     @Override
     @Transactional
@@ -170,18 +175,32 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Cacheable(value = "publishedEvents", key = "#pageable.pageNumber",unless = "#result == null")
-    public Page<Event> listPublishedEvents(Pageable pageable) {
-        return eventRepository.findByStatus(EventStatusEnum.PUBLISHED,pageable);
+    public PageWrapperDto<ListPublishedEventResponseDto> listPublishedEvents(Pageable pageable) {
+        Page<Event> pagedEvents = eventRepository.findByStatus(EventStatusEnum.PUBLISHED,pageable);
+
+        return new PageWrapperDto<>(
+                pagedEvents.map(eventsMapper::toListPublishedEventResponseDto).toList(),
+                pagedEvents.getNumber(),
+                pagedEvents.getSize(),
+                pagedEvents.getTotalPages()
+        );
     }
 
     @Override
-    public Page<Event> searchPublishedEvents(String query, Pageable pageable) {
-        return eventRepository.searchEvents(query, pageable);
+    public PageWrapperDto<ListPublishedEventResponseDto> searchPublishedEvents(String query, Pageable pageable) {
+        Page<Event> pagedEvents =  eventRepository.searchEvents(query, pageable);
+        return new PageWrapperDto<>(
+                pagedEvents.map(eventsMapper::toListPublishedEventResponseDto).toList(),
+                pagedEvents.getNumber(),
+                pagedEvents.getSize(),
+                pagedEvents.getTotalPages()
+        );
     }
 
     @Override
     @Cacheable(value = "eventDetails", key = "#eventId",unless = "#result == null")
-    public Event getPublishedEvent(UUID eventId) {
-        return eventRepository.findByIdAndStatus(eventId,EventStatusEnum.PUBLISHED).orElse(null);
+    public GetPublishedEventDetailsResponseDto getPublishedEvent(UUID eventId) {
+        Event event = eventRepository.findByIdAndStatus(eventId,EventStatusEnum.PUBLISHED).orElse(null);
+        return eventsMapper.toGetPublishedEventDetailsResponseDto(event);
     }
 }
