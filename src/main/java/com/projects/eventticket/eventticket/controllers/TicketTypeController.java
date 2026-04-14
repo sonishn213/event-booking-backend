@@ -28,7 +28,7 @@ public class TicketTypeController {
             @PathVariable UUID ticketTypeId
     ){
 
-       ticketTypeService.purchaseTicket(parsUserId(jwt),ticketTypeId);
+        ticketTypeService.purchaseTicket(parsUserId(jwt),ticketTypeId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

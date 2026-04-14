@@ -34,24 +34,15 @@ public class TicketTypeServiceImpl implements TicketTypeService {
                 String.format("User with id '%s' not found",userId)
         ));
 
-        TicketType ticketType = ticketTypeRepository
-                .findByIdWithLock(ticketTypeId)
-                .orElseThrow(()-> new TicketTypeNotFoundException(
-                        String.format("Ticket type with id '%s'",ticketTypeId)
-                    )
-                );
+        var ticketType = ticketTypeRepository.findByIdWithLock(ticketTypeId).orElseThrow(()->
+                new TicketTypeNotFoundException(String.format("Ticket type with id '%s'",ticketTypeId)
+        ));
 
         // check if tickets available
-        int purchasedTickets = ticketRepository.countByTicketTypeId(ticketType.getId());
-
-        Integer totalAvailable =ticketType.getTotalAvailable();
-
-        if(purchasedTickets + 1 > totalAvailable){
+        if(isTicketAvailable(ticketType))
             throw new TicketSoldOutException();
-        }
 
         Ticket ticket = new Ticket();
-
         ticket.setStatus(TicketStatusEnum.PURCHASED);
         ticket.setTicketType(ticketType);
         ticket.setPurchaser(user);
@@ -61,5 +52,13 @@ public class TicketTypeServiceImpl implements TicketTypeService {
 
         ticketRepository.save(savedTicket);
         return savedTicket;
+    }
+
+    private boolean isTicketAvailable(TicketType ticketType) {
+        int purchasedTickets = ticketRepository.countByTicketTypeId(ticketType.getId());
+
+        Integer totalAvailable = ticketType.getTotalAvailable();
+
+        return purchasedTickets + 1 <= totalAvailable;
     }
 }
