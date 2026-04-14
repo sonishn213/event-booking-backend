@@ -44,9 +44,14 @@ public class PublishedEventController {
     public ResponseEntity<GetPublishedEventDetailsResponseDto> getPublishedEventDetails(
             @PathVariable UUID eventId
     ){
-        return eventService.getPublishedEvent(eventId)
-                .map(eventsMapper::toGetPublishedEventDetailsResponseDto)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        Event event = eventService.getPublishedEvent(eventId);
+
+        if (event == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(
+                eventsMapper.toGetPublishedEventDetailsResponseDto(event)
+        );
     }
 }
