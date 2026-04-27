@@ -11,6 +11,11 @@ import org.mapstruct.ReportingPolicy;
 
 @Mapper(componentModel = "spring",unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface TicketMapper {
+
+    @Mapping(target = "eventName", source = "ticketType.event.name")
+    @Mapping(target = "eventStart", source = "ticketType.event.start")
+    @Mapping(target = "eventEnd", source = "ticketType.event.end")
+    @Mapping(target = "eventVenue", source = "ticketType.event.venue")
     ListTicketTicketTypeResponseDto toListTicketTicketTypeResponseDto(TicketType ticketType);
 
     ListTicketResponseDto toListTicketResponseDto(Ticket ticket);

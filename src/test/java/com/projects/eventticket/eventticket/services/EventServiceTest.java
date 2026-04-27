@@ -2,6 +2,7 @@ package com.projects.eventticket.eventticket.services;
 
 import com.projects.eventticket.eventticket.domain.requests.CreateEventRequest;
 import com.projects.eventticket.eventticket.exception.UserNotFoundException;
+import com.projects.eventticket.eventticket.mappers.EventsMapper;
 import com.projects.eventticket.eventticket.repository.EventRepository;
 import com.projects.eventticket.eventticket.repository.UserRepository;
 import com.projects.eventticket.eventticket.services.impl.EventServiceImpl;
@@ -23,6 +24,9 @@ public class EventServiceTest {
 
     @Mock
     private EventRepository eventRepository;
+
+    @Mock
+    private EventsMapper eventsMapper;
 
     @InjectMocks
     EventServiceImpl eventService;

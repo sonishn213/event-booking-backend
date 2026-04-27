@@ -1,0 +1,14 @@
+package com.projects.eventticket.eventticket.payment_gateway.dtos;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class OrderDto {
+    private String id;
+    private int amount;
+    private String currency;
+}

@@ -1,6 +1,8 @@
 package com.projects.eventticket.eventticket.controllers;
 
+import com.projects.eventticket.eventticket.payment_gateway.dtos.OrderDto;
 import com.projects.eventticket.eventticket.services.TicketTypeService;
+import com.razorpay.RazorpayException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,12 +25,12 @@ public class TicketTypeController {
     private final TicketTypeService ticketTypeService;
 
     @PostMapping(path="/{ticketTypeId}/tickets")
-    private ResponseEntity<Void> purchaseTicket(
+    private ResponseEntity<OrderDto> purchaseTicket(
             @AuthenticationPrincipal Jwt jwt,
             @PathVariable UUID ticketTypeId
-    ){
+    ) throws RazorpayException {
 
-        ticketTypeService.purchaseTicket(parsUserId(jwt),ticketTypeId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        OrderDto orderResponse = ticketTypeService.purchaseTicket(parsUserId(jwt),ticketTypeId);
+        return ResponseEntity.ok(orderResponse);
     }
 }

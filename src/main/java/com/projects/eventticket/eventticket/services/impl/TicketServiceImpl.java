@@ -18,7 +18,8 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public Page<Ticket> listTicketsForUser(UUID userId, Pageable pageable) {
-        return ticketRepository.findByPurchaserId(userId,pageable);
+        Page<Ticket> tickets = ticketRepository.findByPurchaserId(userId,pageable);
+        return tickets;
     }
 
     @Override

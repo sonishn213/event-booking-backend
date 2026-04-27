@@ -92,6 +92,8 @@ public class EventController {
                 eventId
         );
 
+
+
         return ResponseEntity.noContent().build();
     }
 

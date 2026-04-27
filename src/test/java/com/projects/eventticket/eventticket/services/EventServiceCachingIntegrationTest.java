@@ -1,8 +1,10 @@
 package com.projects.eventticket.eventticket.services;
 
 import com.projects.eventticket.eventticket.config.RedisCacheConfig;
+import com.projects.eventticket.eventticket.domain.dtos.GetPublishedEventDetailsResponseDto;
 import com.projects.eventticket.eventticket.domain.entity.Event;
 import com.projects.eventticket.eventticket.domain.enums.EventStatusEnum;
+import com.projects.eventticket.eventticket.mappers.EventsMapper;
 import com.projects.eventticket.eventticket.repository.EventRepository;
 import com.projects.eventticket.eventticket.repository.UserRepository;
 import com.projects.eventticket.eventticket.services.impl.EventServiceImpl;
@@ -42,6 +44,9 @@ public class EventServiceCachingIntegrationTest {
     @MockBean
     private UserRepository userRepository;
 
+    @MockBean
+    private EventsMapper eventsMapper;
+
     @Autowired
     private EventService eventService;
 
@@ -55,6 +60,10 @@ public class EventServiceCachingIntegrationTest {
 
         Event anEvent = new Event();
         anEvent.setId(id);
+        anEvent.setStatus(EventStatusEnum.PUBLISHED);
+
+        var eventDto = new GetPublishedEventDetailsResponseDto();
+        eventDto.setId(anEvent.getId());
 
         Optional<Event> oEvent = Optional.of(anEvent);
 
@@ -62,20 +71,24 @@ public class EventServiceCachingIntegrationTest {
                 findByIdAndStatus(id, EventStatusEnum.PUBLISHED))
                 .willReturn(oEvent);
 
-        Event eventCacheMiss = eventService.getPublishedEvent(id);
-        Event eventCacheHit = eventService.getPublishedEvent(id);
+        given(eventsMapper.
+                toGetPublishedEventDetailsResponseDto(anEvent))
+                .willReturn(eventDto);
 
-        assertThat(eventCacheMiss).isEqualTo(anEvent);
-        assertThat(eventCacheHit).isEqualTo(anEvent);
+        GetPublishedEventDetailsResponseDto eventCacheMiss = eventService.getPublishedEvent(id);
+        GetPublishedEventDetailsResponseDto eventCacheHit = eventService.getPublishedEvent(id);
+
+        assertThat(eventCacheMiss).isEqualTo(eventDto);
+        assertThat(eventCacheHit).isEqualTo(eventDto);
 
         verify(mockEventRepository, times(1)).findByIdAndStatus(id,EventStatusEnum.PUBLISHED);
-        assertThat(eventFromCache(id).orElse(null)).isEqualTo(anEvent);
+        assertThat(eventFromCache(id).orElse(null)).isEqualTo(eventDto);
     }
 
-    private Optional<Event> eventFromCache(UUID id) {
+    private Optional<GetPublishedEventDetailsResponseDto> eventFromCache(UUID id) {
         var cache = cacheManager.getCache("eventDetails");
         if (cache == null) return Optional.empty();
 
-        return Optional.ofNullable(cache.get(id, Event.class));
+        return Optional.ofNullable(cache.get(id, GetPublishedEventDetailsResponseDto.class));
     }
 }
