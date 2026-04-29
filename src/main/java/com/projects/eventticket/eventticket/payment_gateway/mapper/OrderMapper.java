@@ -10,15 +10,14 @@ import java.util.Map;
 
 @Mapper(componentModel = "spring",unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface OrderMapper {
-//    String map(Object value);
-//    OrderDto toOrderDto(Map<String,Object> modelJson);
-default OrderDto toOrderDto(Order order) {
-    if (order == null) return null;
 
-    return new OrderDto(
-            order.get("id"),
-            order.get("amount") != null ? ((Number) order.get("amount")).intValue() : 0,
-            order.get("currency")
-    );
-}
+    default OrderDto toOrderDto(Order order) {
+        if (order == null) return null;
+
+        return new OrderDto(
+                order.get("id"),
+                order.get("amount") != null ? ((Number) order.get("amount")).intValue() : 0,
+                order.get("currency")
+        );
+    }
 }
