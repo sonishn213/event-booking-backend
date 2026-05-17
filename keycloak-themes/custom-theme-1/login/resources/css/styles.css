@@ -1,29 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400..800&display=swap');
+
 .login-pf body {
-    background: #000;
-    color:white;
+    background-image: url("../image/bg-5.png");
+    background-repeat: no-repeat;
+    background-size:cover;
+    background-position-y:bottom;
+/*    background-color:#52360076;*/
+/*    background-blend-mode:overlay;*/
+    min-height:100vh;
+}
+
+div.kc-logo-text {
+    background-image: url(../img/keycloak-logo-text.png);
+    background-repeat: no-repeat;
+    height: 63px;
+    width: 300px;
+    margin: 0 auto;
+    display:none;
 }
 
 .card-pf{
-    background: #0c101b;
-    border: 1px #232938 solid;
-    border-radius: 10px;
+/*    background: #0c101b;*/
+/*    background-image:   linear-gradient(180deg,rgba(255, 105, 0, 0.8) 0%, rgba(255, 105, 0, 0.4) 30%,rgba(255,255,255) 100%);*/
+
+/*    border: 1px #232938 solid;*/
+/*    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;*/
+    background: rgba(255, 255, 255, 1);
+    backdrop-filter: blur(5px);
+    border-radius: 20px;
+    border-top:none;
 }
 
 #kc-info-wrapper {
-    background-color: #040913;
+    background-color: transparent;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
 }
 
 .login-pf-page .login-pf-signup {
-    color: white;
+    color: black;
 }
 
 .pf-c-form-control{
-    color: #FFFFFF !important;
-    background-color: #1C2333 !important;
+    color: black !important;
+    background-color: white !important;
     border-color: #3A445C !important;
-    border-radius: 6px;
+    border-radius: 10px;
+    padding:0px 20px;
+}
+
+.pf-c-form-control:not(textarea) {
+    height: 45px;
+    text-overflow: ellipsis;
 }
 
 .pf-c-input-group .pf-c-form-control{
@@ -32,10 +60,10 @@
 }
 
 .pf-c-button.pf-m-control {
-    background-color: #1c2333;
-    color:white;
+    background-color: white;
+    color:black;
     border-top-right-radius :6px;
-      border-bottom-right-radius :6px;
+    border-bottom-right-radius :6px;
 }
 
 .pf-c-button:after {
@@ -45,8 +73,8 @@
 }
 
 .pf-c-button.pf-m-control:after {
-     border-top-right-radius :6px;
-      border-bottom-right-radius :6px;
+    border-top-right-radius :6px;
+    border-bottom-right-radius :6px;
 }
 
 .pf-c-input-group {
@@ -54,9 +82,23 @@
 }
 
 input.pf-c-button{
-   padding-top: 10px;
-   padding-bottom: 10px;
-   border-radius: 6px;
+    font-family: "Syne", sans-serif;
+   padding-top: 13px;
+   padding-bottom: 13px;
+   border-radius: 100px;
+    text-transform:uppercase;
+    font-size:16px;
+    font-weight:800;
+
+}
+
+.pf-c-button.pf-m-primary {
+    color: white;
+    background-color: #ff6900;
+}
+
+.pf-c-button.pf-m-primary:hover{
+    background-color: #df5b00;
 }
 
 .login-pf-header .col-md-10{
@@ -71,3 +113,26 @@ input.pf-c-button{
 .login-pf-page{
     padding-bottom:40px;
 }
+
+h1{
+    font-family: "Syne", sans-serif;
+    font-weight:800;
+}
+#kc-page-title{
+   text-transform:uppercase;
+    font-size:20px;
+}
+
+#kc-header-wrapper{
+    padding-top:10px;
+    padding-bottom:0;
+}
+
+a{
+    color:#ff6900;
+}
+.login-pf a:hover{
+    color:#cb5200;
+}
+
+

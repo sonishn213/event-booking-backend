@@ -8,6 +8,10 @@ import com.projects.eventticket.eventticket.mappers.EventsMapper;
 import com.projects.eventticket.eventticket.services.EventService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.keycloak.admin.client.Keycloak;
+import org.keycloak.admin.client.resource.RealmResource;
+import org.keycloak.admin.client.resource.UserResource;
+import org.keycloak.admin.client.resource.UsersResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -96,5 +100,7 @@ public class EventController {
 
         return ResponseEntity.noContent().build();
     }
+
+
 
 }

@@ -1,5 +1,6 @@
 package com.projects.eventticket.eventticket.config;
 
+import com.projects.eventticket.eventticket.domain.enums.UserRoleEnum;
 import com.projects.eventticket.eventticket.filter.UserProvisioningFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,8 +28,9 @@ public class SecurityConfig {
                             HttpMethod.GET,"/api/v1/published-events/**"
                     )
                     .permitAll()
-                    .requestMatchers("/api/v1/events").hasAuthority("role_organizer")
-                    .requestMatchers("/api/v1/ticket-validations").hasAuthority("role_staff")
+                    .requestMatchers("/api/v1/events").hasAuthority(UserRoleEnum.ROLE_ORGANIZER.toString().toLowerCase())
+                    .requestMatchers("/api/v1/ticket-validations").hasAuthority(UserRoleEnum.ROLE_STAFF.toString().toLowerCase())
+                    .requestMatchers("/api/v1/staffs").hasAuthority(UserRoleEnum.ROLE_ORGANIZER.toString().toLowerCase())
                     .anyRequest()
                     .authenticated()
             )
