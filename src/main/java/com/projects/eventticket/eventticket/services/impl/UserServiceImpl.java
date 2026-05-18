@@ -63,7 +63,7 @@ public class UserServiceImpl implements UserService {
 
         organizerUserRepository.save(organizerUser);
 
-        identityProviderService.assignRoleOrganizer(userId.toString());
+        identityProviderService.assignRoleOrganizer(userId.toString(),UserRoleEnum.ROLE_ORGANIZER);
 
         return true;
     }

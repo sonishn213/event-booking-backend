@@ -23,7 +23,7 @@ public  class HtmlUtil {
         for(Map.Entry<String,String> entry : payload.entrySet()){
             String key = entry.getKey();
             String value = entry.getValue();
-            content = content.replaceFirst("{"+key+"}",value);
+            content = content.replace("{"+key+"}",value);
         }
 
         return content;

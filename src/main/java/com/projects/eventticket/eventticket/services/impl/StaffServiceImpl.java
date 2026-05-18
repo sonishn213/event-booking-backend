@@ -4,6 +4,7 @@ import com.projects.eventticket.eventticket.domain.dtos.ListStaffResponseDto;
 import com.projects.eventticket.eventticket.domain.entity.OrganizerUser;
 import com.projects.eventticket.eventticket.domain.entity.StaffInvites;
 import com.projects.eventticket.eventticket.domain.entity.User;
+import com.projects.eventticket.eventticket.domain.enums.UserRoleEnum;
 import com.projects.eventticket.eventticket.email.InviteStaffMail;
 import com.projects.eventticket.eventticket.exception.InvitationNotFoundException;
 import com.projects.eventticket.eventticket.exception.StaffAlreadyBelongsException;
@@ -15,15 +16,14 @@ import com.projects.eventticket.eventticket.repository.UserRepository;
 import com.projects.eventticket.eventticket.services.IdentityProviderService;
 import com.projects.eventticket.eventticket.services.StaffService;
 import jakarta.mail.MessagingException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -67,14 +67,29 @@ public class StaffServiceImpl implements StaffService {
     }
 
     @Override
+    @Transactional
     public void acceptInvite(UUID StaffId, UUID invitationId) {
         StaffInvites staffInvites = staffInviteRepository.findById(invitationId)
                 .orElseThrow(()->new InvitationNotFoundException(
                         "Invitation not found exception"
                 ));
 
-        userRepository.findByEmail(staffInvites.getStaffEmail());
+        //get staff
+        User staff = userRepository.findByIdAndEmail(StaffId,staffInvites.getStaffEmail())
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
 
+        //get organizerUser
+        OrganizerUser organizerUser = staffInvites.getOrganizerUser();
+        //set staff in organizerUser
+//        List<User> staffs = new ArrayList<>();
+//        staffs.add(staff);
+        organizerUser.getStaffs().add(staff);
+        // save organizerUser
+        organizerUserRepository.save(organizerUser);
+        staffInviteRepository.delete(staffInvites);
+
+        // send request to keycloak to put the staff role in staff
+        identityProviderService.assignRoleOrganizer(StaffId.toString(), UserRoleEnum.ROLE_STAFF);
     }
 
 }

@@ -30,9 +30,9 @@ public class StaffController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/invite")
+    @PostMapping("/invite/{email}")
     public ResponseEntity<Void> invite(
-            @AuthenticationPrincipal Jwt jwt,String email
+            @AuthenticationPrincipal Jwt jwt,@PathVariable String email
     ) throws MessagingException, IOException {
         staffService.invite(parsUserId(jwt), email);
         return ResponseEntity.noContent().build();

@@ -50,8 +50,8 @@ public class OrganizerUser {
     @ManyToMany
     @JoinTable(
             name = "organizer_user_staff",
-            joinColumns = @JoinColumn(name = "organizer_user_id"),
-            inverseJoinColumns = @JoinColumn(name = "staff_id")
+            joinColumns = @JoinColumn(name = "organizer_user_id",referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "staff_id",referencedColumnName = "id")
     )
     private List<User> staffs = new ArrayList<>();
 

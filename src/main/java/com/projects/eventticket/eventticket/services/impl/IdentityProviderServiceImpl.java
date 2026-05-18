@@ -19,11 +19,11 @@ public class IdentityProviderServiceImpl implements IdentityProviderService {
     private final RealmResource keycloakRealm;
 
     @Override
-    public void assignRoleOrganizer(String userId) {
+    public void assignRoleOrganizer(String userId,UserRoleEnum userRole) {
         UserResource user  = keycloakRealm.users().get(userId);
 
         RoleResource role = keycloakRealm.roles().get(
-                UserRoleEnum.ROLE_ORGANIZER.toString().toLowerCase()
+                userRole.toString().toLowerCase()
         );
 
         List<RoleRepresentation> roleRepresentations = new ArrayList<>(
