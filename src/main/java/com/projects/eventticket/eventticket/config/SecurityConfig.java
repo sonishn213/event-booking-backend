@@ -30,6 +30,7 @@ public class SecurityConfig {
                     .permitAll()
                     .requestMatchers("/api/v1/events").hasAuthority(UserRoleEnum.ROLE_ORGANIZER.toString().toLowerCase())
                     .requestMatchers("/api/v1/ticket-validations").hasAuthority(UserRoleEnum.ROLE_STAFF.toString().toLowerCase())
+                    .requestMatchers("/api/v1/staff/**").hasAuthority(UserRoleEnum.ROLE_STAFF.toString().toLowerCase())
                     .requestMatchers("/api/v1/staffs").hasAuthority(UserRoleEnum.ROLE_ORGANIZER.toString().toLowerCase())
                     .anyRequest()
                     .authenticated()

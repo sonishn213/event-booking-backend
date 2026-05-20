@@ -1,6 +1,8 @@
 package com.projects.eventticket.eventticket.services.impl;
 
 import com.projects.eventticket.eventticket.domain.dtos.ListStaffResponseDto;
+import com.projects.eventticket.eventticket.domain.dtos.ListStaffsOrganizersDto;
+import com.projects.eventticket.eventticket.domain.dtos.PageWrapperDto;
 import com.projects.eventticket.eventticket.domain.entity.OrganizerUser;
 import com.projects.eventticket.eventticket.domain.entity.StaffInvites;
 import com.projects.eventticket.eventticket.domain.entity.User;
@@ -9,6 +11,7 @@ import com.projects.eventticket.eventticket.email.InviteStaffMail;
 import com.projects.eventticket.eventticket.exception.InvitationNotFoundException;
 import com.projects.eventticket.eventticket.exception.StaffAlreadyBelongsException;
 import com.projects.eventticket.eventticket.exception.UserNotFoundException;
+import com.projects.eventticket.eventticket.mappers.OrganizerMapper;
 import com.projects.eventticket.eventticket.mappers.StaffMapper;
 import com.projects.eventticket.eventticket.repository.OrganizerUserRepository;
 import com.projects.eventticket.eventticket.repository.StaffInviteRepository;
@@ -34,6 +37,7 @@ public class StaffServiceImpl implements StaffService {
     private final StaffMapper staffMapper;
     private final InviteStaffMail inviteStaffMail;
     private final StaffInviteRepository staffInviteRepository;
+    private final OrganizerMapper organizerMapper;
 
     @Override
     public Page<ListStaffResponseDto> listStaff(UUID organizerId, Pageable pageable) {
@@ -80,9 +84,7 @@ public class StaffServiceImpl implements StaffService {
 
         //get organizerUser
         OrganizerUser organizerUser = staffInvites.getOrganizerUser();
-        //set staff in organizerUser
-//        List<User> staffs = new ArrayList<>();
-//        staffs.add(staff);
+
         organizerUser.getStaffs().add(staff);
         // save organizerUser
         organizerUserRepository.save(organizerUser);
@@ -90,6 +92,21 @@ public class StaffServiceImpl implements StaffService {
 
         // send request to keycloak to put the staff role in staff
         identityProviderService.assignRoleOrganizer(StaffId.toString(), UserRoleEnum.ROLE_STAFF);
+    }
+
+    public PageWrapperDto<ListStaffsOrganizersDto> organizersByStaffId(
+            UUID staffId,
+            Pageable pageable)
+    {
+        Page<OrganizerUser> organizerUsers = organizerUserRepository
+                .findByStaffs_Id(staffId,pageable);
+
+        return new PageWrapperDto<>(
+                organizerUsers.map(organizerMapper::toListStaffsOrganizersDto).toList(),
+                organizerUsers.getNumber(),
+                organizerUsers.getSize(),
+                organizerUsers.getTotalPages()
+        );
     }
 
 }

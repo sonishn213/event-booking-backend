@@ -49,8 +49,11 @@ public class User {
     )
     private List<Event> staffingEvents = new ArrayList<>();
 
+    @OneToOne(mappedBy = "user")
+    private OrganizerUser organizerUser;
+
     @ManyToMany(mappedBy = "staffs")
-    private List<OrganizerUser> staffs = new ArrayList<>();
+    private List<OrganizerUser> organizerStaffAssignments = new ArrayList<>();
 
     @CreatedDate
     @Column(name="created_at",updatable = false,nullable = false)

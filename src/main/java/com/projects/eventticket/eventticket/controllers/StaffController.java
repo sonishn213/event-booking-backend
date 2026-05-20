@@ -37,6 +37,4 @@ public class StaffController {
         staffService.invite(parsUserId(jwt), email);
         return ResponseEntity.noContent().build();
     }
-
-
 }
